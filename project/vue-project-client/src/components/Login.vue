@@ -75,6 +75,8 @@
 </template>
 
 <script>
+import { async } from 'q';
+import axios from 'axios'
 export default {
   data () {
 
@@ -173,14 +175,24 @@ export default {
    
    // 注册
     userResgister(formName) {
-      this.$refs[formName].validate((valid) => {
+      this.$refs[formName].validate( async valid => {
         if (valid) {
-          this.$message({
-          message: '注册成功！用户名:'+this.registerData.username +"密码:"+ this.registerData.password,
-          type: 'success',
-          duration:1500
-        });
+          try {
+          const res = await axios.post('http://localhost:8000/users/register', {
+            username: this.registerData.username,
+            password: this.registerData.password
+          })
+            console.log(res);
+            this.$message({
+              message: '注册成功！用户名:'+this.registerData.username +"密码:"+ this.registerData.password,
+              type: 'success',
+              duration:1500
+            });
           this.RegisterDialogVisible = false;
+          } catch(err) {
+            this.$message.error('注册失败！' + err.response.data.message); // 获取后台error的message
+            console.error(err);
+          }
         } else {
           this.$message.error('注册信息不合法！');
           // this.RegisterDialogVisible = false;
