@@ -2,7 +2,7 @@
 
 module.exports = (err, ctx) => {
     let status = 500
-    switch (err.code) {
+    switch (err.code) {// MDN http响应码
       case '10001':
         status = 400
         break

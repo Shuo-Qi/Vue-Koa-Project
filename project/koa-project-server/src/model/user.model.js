@@ -25,6 +25,12 @@ const User = seq.define('user', {
     defaultValue: 0,
     comment: '是否为管理员, 0: 不是管理员(默认); 1: 是管理员',
   },
+  // isLogin: {
+  //   type: DataTypes.BOOLEAN,
+  //   allowNull: false,
+  //   defaultValue: 0,
+  //   comment: '是否处于登录状态, 0: 否(默认：表示从未登录过或执行了注销或修改了密码); 1: 是',
+  // }
 })
 
 // 强制同步数据库(创建数据表)

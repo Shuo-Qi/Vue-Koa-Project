@@ -14,7 +14,7 @@ class UserService {
         return res.dataValues // 取res中的dataValues部分，async返回的是Promise类型的对象
     }
 
-    // 查
+    // 查 id, username, password, isAdmin
     async getUserInfo({id, username, password, isAdmin}) {
         // where条件
         const whereOpt = {}
@@ -29,6 +29,20 @@ class UserService {
             where: whereOpt, // where条件
           })
         return res ? res.dataValues : null
+    }
+
+    // 根据id修改username, password, isAdmin
+    async updateById( {id, username, password, isAdmin} ) {
+        // where条件
+        const whereOpt = {id}
+        // 需要修改的字段
+        const newUser = {}
+        username && Object.assign(newUser, { username })
+        password && Object.assign(newUser, { password })
+        isAdmin && Object.assign(newUser, { isAdmin })
+        // 修改语句，返回res>0成功，否则失败
+        const res = await User.update(newUser, { where: whereOpt} )
+        return res[0] > 0 ? true : false
     }
 }
 
