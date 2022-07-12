@@ -48,7 +48,12 @@ module.exports = {
     },
     notAdminError: {
         code: '10010',
-        message: '无管理员权限', // 执行updatePassowrd方法时出错
+        message: '无管理员权限',
+        result: '',
+    },
+    notLoginError: {
+        code: '10011',
+        message: '用户未登录', // isLogin为0，用户手动注销或者修改了用户信息或者从未登录过，此时需要重新登陆
         result: '',
     }
 }

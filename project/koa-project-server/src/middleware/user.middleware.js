@@ -11,6 +11,7 @@ const { userFormateError,
         tokenExpiredError,
         invalidToken, 
         notAdminError,
+        notLoginError,
       } = require('../constant/error.type')
 const jwt = require('jsonwebtoken')
 // JWT密钥
@@ -94,12 +95,19 @@ const userValidator_3 = async (ctx, next) => {
 
 // 用户授权验证中间件，验证用户是否登录
 const auth = async (ctx, next) => {
+  
   const {authorization} = ctx.request.header // 提取header的authorization
   const token = authorization.replace('Bearer ', '') // 从authorization中提取token
   // 验证token
   try {
-    // user中包含了payload的信息(id, username, isAdmin)
+    // user中包含了payload的信息(id, username, isAdmin, isLogin)
     const user = jwt.verify(token, JWT_SECRET) // 验证通过返回payload内容，验证失败返回err：TokenExpiredError，JsonWebTokenError等
+    // 先检查isLogin是否为1，为1继续，为0表示需要重新登录
+    const {isLogin} = await getUserInfo({username: user.username})
+    if(!isLogin) {
+      console.error('用户需要重新登录', {username: user.username, isLogin})
+      return ctx.app.emit('error', notLoginError, ctx)
+    }
     ctx.state.user = user // 存入ctx.state.user，之后通过ctx.state.user拿到用户信息
   } catch (err) {
     switch (err.name) {

@@ -7,7 +7,7 @@ const Router = require('koa-router')
 const { userValidator_1, userValidator_2, crpytPassword, userValidator_3, auth, hadAdminPermission, } = require('../middleware/user.middleware')
 
 // 导入controller
-const { register, login, updatePassword } = require('../controller/user.controller')
+const { register, login, updatePassword, logout, updatePassword2, } = require('../controller/user.controller')
 
 // 实例化路由
 const router = new Router({ prefix: '/users' })
@@ -19,8 +19,14 @@ router.post('/register', userValidator_1, userValidator_2, register)
 // 登录接口
 router.post('/login',userValidator_1, userValidator_3, login)
 
+// 注销接口
+router.patch('/logout', auth, logout)
+
 // 修改密码接口（登录后），patch局部更新，可选加密
 router.patch('/updatePassword', auth, updatePassword)
+
+// 修改密码接口（登录前）
+router.patch('/updatePassword2', userValidator_1, userValidator_3, updatePassword2)
 
 // 导出路由
 module.exports = router
