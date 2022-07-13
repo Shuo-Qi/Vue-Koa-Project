@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken')
 const { JWT_SECRET } = process.env
 const { createUser, getUserInfo, updateById } = require('../service/user.service')
 const {userRegisterError, userloginError, updatePasswordError} = require('../constant/error.type')
+const { setMaxListeners } = require('koa')
 
 class UserController {
 
@@ -113,6 +114,26 @@ class UserController {
             console.error('修改密码失败'); 
             ctx.app.emit('error', updatePasswordError, ctx)
         }
+    }
+
+    // 根据username查看用户信息 或 查看当前用户信息
+    async getUser(ctx, next) {
+        // 根据username查询
+        // const { username } = ctx.request.query // get请求的参数从query中取
+        // 
+        // 查看当前用户信息
+        const { username } = ctx.state.user 
+        console.log(username);
+        try {
+            const {password, ...res} = await getUserInfo({username})
+            ctx.body = {
+                code: 0,
+                message: `用户 ${username} 查询成功！`,
+                result: res
+            }
+        } catch (error) {
+            console.error("查询失败",error);
+        } 
     }
 
 }

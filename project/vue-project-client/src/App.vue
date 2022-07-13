@@ -22,13 +22,15 @@
 // import HelloWorld from './components/HelloWorld.vue'
 import LoginPage from './views/LoginPage.vue'
 import HomePage from './views/HomePage.vue'
+import HomePage_admin from './views/HomePage_admin'
 
 export default {
   name: 'app',
   components: {
     // HelloWorld,
     LoginPage,
-    HomePage
+    HomePage,
+    HomePage_admin,
   }
 }
 </script>

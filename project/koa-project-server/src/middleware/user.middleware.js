@@ -97,6 +97,7 @@ const userValidator_3 = async (ctx, next) => {
 const auth = async (ctx, next) => {
   
   const {authorization} = ctx.request.header // 提取header的authorization
+  console.log(authorization);
   const token = authorization.replace('Bearer ', '') // 从authorization中提取token
   // 验证token
   try {

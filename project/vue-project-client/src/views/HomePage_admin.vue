@@ -1,6 +1,6 @@
 <template>
   <div style="display: flex; justify-content: center; align-items: center;">
-    <div style="font-size:large; text-align: center;">HomePage {{this.$route.query.user}}</div>
+    <div style="font-size:large; text-align: center;">HomePage_admin {{this.$route.query.user}}</div>
     <div>{{userInfo}}</div>
     <el-button type="primary" @click="userLogout">注销</el-button>
   </div>

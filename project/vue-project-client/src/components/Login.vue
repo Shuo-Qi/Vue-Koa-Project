@@ -101,7 +101,6 @@ export default {
       };
     return {
       
-      role: 0, //角色
       loginData:{
         username: '',
         password: '',
@@ -155,22 +154,42 @@ export default {
 
   methods: {
     // 登录
-    userLogin() {
-      this.$message({
-          message: "登录成功！用户名:"+this.loginData.username +"密码:"+ this.loginData.password,
+    async userLogin() {
+      try {
+        const res = await axios.post('http://localhost:8000/users/login', {
+            username: this.loginData.username,
+            password: this.loginData.password
+          })
+        console.log(res);
+        this.$message({
+          message: res.data.message,
           type: 'success',
           duration:1500
         });
-        // 页面带参数跳转
-      this.$router.push({
-        name: 'HomePage',
-        params: {
-          user: this.loginData.username
+        this.$refs['form1'].resetFields();
+        // 页面带参数跳转 name+params和path+query两种方式，前者刷新页面会清空.或者使用sessionStorage存储要传的数据
+        if(!res.data.result.isAdmin) {// 不是管理员
+          this.$router.push({
+            path: '/home',
+            query: {
+              user: this.loginData.username,
+              token: res.data.result.token,
+            }
+          })
+        } else {// 是管理员
+            this.$router.push({
+            path: '/home_admin',
+            query: {
+              user: this.loginData.username,
+              token: res.data.result.token,
+            }
+          })
         }
-      })
-
-      // alert("登录：用户名"+this.loginData.username +"密码"+ this.loginData.password);
-      // console.log("用户名"+this.loginData.username +"密码"+ this.loginData.password);
+      } catch (error) {
+        this.$refs['form1'].resetFields();// 清空表单
+        this.$message.error('登录失败！' + error.response.data.message);
+        console.error(error);
+      }
     },
    
    // 注册
@@ -184,7 +203,7 @@ export default {
           })
             console.log(res);
             this.$message({
-              message: '注册成功！用户名:'+this.registerData.username +"密码:"+ this.registerData.password,
+              message: res.data.message,
               type: 'success',
               duration:1500
             });
@@ -193,8 +212,10 @@ export default {
             this.$message.error('注册失败！' + err.response.data.message); // 获取后台error的message
             console.error(err);
           }
+          this.$refs[formName].resetFields();
         } else {
           this.$message.error('注册信息不合法！');
+          this.$refs[formName].resetFields();
           // this.RegisterDialogVisible = false;
           return false;
         }
@@ -203,18 +224,29 @@ export default {
       
     // 修改密码
     userChange(formName) {
-      this.$refs[formName].validate((valid) => {
+      this.$refs[formName].validate(async (valid) => {
         if (valid) {
-          this.$message({
-          message: '密码修改成功！用户名:'+this.ChangePasswordData.username +
-      "原密码:"+ this.ChangePasswordData.oldPassword+
-      "新密码:"+ this.ChangePasswordData.newPassword,
-          type: 'success',
-          duration:1500
-        });
-          this.PasswordDialogVisible = false;
+          try {
+            const res = await axios.patch('http://localhost:8000/users/updatePassword2', {
+              username: this.ChangePasswordData.username,
+              password: this.ChangePasswordData.oldPassword,
+              newPassword: this.ChangePasswordData.newPassword
+            })
+            console.log(res);
+            this.$message({
+              message: res.data.message,
+              type: 'success',
+              duration:1500
+            });
+            this.PasswordDialogVisible = false;
+          } catch(err) {
+            this.$message.error('密码修改失败！' + err.response.data.message); // 获取后台error的message
+            console.error(err);
+          }
+          this.$refs[formName].resetFields();
         } else {
           this.$message.error('密码修改信息不合法！');
+          this.$refs[formName].resetFields();
           // this.PasswordDialogVisible = false;
           return false;
         }

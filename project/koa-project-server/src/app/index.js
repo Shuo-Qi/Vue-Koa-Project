@@ -15,23 +15,21 @@ const cors = require('koa2-cors');
 const app = new Koa()
 
 // 解决跨域问题
-app.use(cors({
+app.use(cors(
+    {
     
     origin: function (ctx) {
-    
-        // if (ctx.url === '/') {
-    
-        //     return "*"; // 允许来自所有域名请求
-        // }
-        // return 'http://localhost:8080'; 
+        //console.log(ctx.header.origin);
         return ctx.header.origin
+        // return 'http://localhost:8080'
     },
     exposeHeaders: ['WWW-Authenticate', 'Server-Authorization'],
     maxAge: 5,
     credentials: true,
     allowMethods: ['GET', 'POST', 'DELETE', 'PUT', 'PATCH', 'HEAD', 'OPTIONS'],
     allowHeaders: ['Content-Type', 'Authorization', 'Accept'],
-}))
+}
+))
 //注册koa-body中间件
 app.use(KoaBody())
 // 注册路由中间件
