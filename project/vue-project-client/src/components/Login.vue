@@ -10,7 +10,8 @@
           <el-input v-model="loginData.username" placeholder="请输入用户名" maxlength="10"></el-input>
         </el-form-item>
         <el-form-item prop="password">
-          <el-input v-model="loginData.password" placeholder="请输入密码" show-password maxlength="13" style="margin-top:5px"></el-input>
+          <!-- 回车登录响应 -->
+          <el-input v-model="loginData.password" placeholder="请输入密码" show-password maxlength="13" style="margin-top:5px" @keyup.enter.native="userLogin"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="userLogin" class="loginButton">登录</el-button>
