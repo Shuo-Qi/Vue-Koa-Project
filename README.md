@@ -1,2 +1,2 @@
 # Vue-Koa-Project
- A Vue2+Koa2+MySQL Project
+ A Vue2+Koa2+MySQL Project framework
